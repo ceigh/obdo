@@ -1,69 +1,60 @@
-export default {
-  _de: [0, 0], // depth: [old, new]
-  _st: [],     // parents stack
-  obj: {},     // result
+// errors
+const err = {
+  throw: msg => { throw new Error(msg); },
 
-
-  _to: function(k1, k2, val = {}, obj = this.obj) {
-    Object.keys(obj).some(k => {
-      if (k === k1) obj[k][k2] = val;
-      else if (obj[k] && typeof obj[k] === 'object')
-        this._to(k1, k2, val, obj[k]);
-    });
+  inc: function(curr, prev, diff) {
+    this.throw(`Only increment is allowed, but ${
+      curr} - ${prev} = ${diff}`);
   },
 
-
-  tab: function(tabs = 1) {
-    this._de = [this._de[1], tabs];
-    return this;
+  tab: function() {
+    this.throw('Remove unused last tab');
   },
+};
 
 
-  key: function(name) {
-    const de = this._de;
-    const st = this._st;
-    const ff = de[1] - de[0];
-    
-    if (!ff) {
+export default () => ({
+  _de:  0, // depth
+  _st: [], // stack
+  obj: {}, // final
 
-      if (!de[0]) this.obj[name] = {};
 
-      else this._to(st[de[0] - 1], name);
+  key: function(name, tabs = 0) {
+    const prev = this._de;
+    const curr = tabs;
+    const diff = curr - prev;
 
-      this._st[de[0]] = name;
-    
-    } else {
+    if (curr > prev && diff !== 1)
+      err.inc(curr, prev, diff);
 
-      if (ff > 0) this._to(st[st.length - 1], name);
+    this._st.length = curr + 1;
+    this._st[curr] = name;
 
-      else {
-        for (let i = 0; i < -ff + 1; ++i) this._st.pop();
-        this._to(st[st.length - 1], name);
-        this.tab(0);
-      }
-      if (!de[1]) this.obj[name] = {};
-      this._st.push(name);
-    }
-
-    console.log(this._st, de);
+    this._de = curr;
+    console.log([prev, curr], this._st);
     return this;
   },
 
 
   val: function(data) {
-    const st = this._st;
-    const len = st.length;
-
-    if (len > 1) this._to(st[len - 2], st[len - 1], data);
-    else this._to('obj', st[0], data, this);
-
     return this;
   },
 
 
+  tab: function(tabs = 1) {
+    return {
+      key: name => this.key(name, tabs),
+      get obj() { err.tab() },
+
+      get o() { return this.obj },
+      get k() { return this.key },
+    };
+  },
+
+
   // aliases
-  get _() { return this.tab },
-  get k() { return this.key },
-  get v() { return this.val },
-  get o() { return this.obj },
-};
+  get o() { return this.obj; },
+  get k() { return this.key; },
+  get v() { return this.val; },
+  get _() { return this.tab; },
+});

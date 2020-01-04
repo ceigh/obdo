@@ -18,14 +18,17 @@ const err = {
 
 
 export default (string = false, space) => ({
-  _de:  0, // depth
-  _st: [], // stack
-  _ob: {}, // final
+  _de:  0,                        // depth
+  _st: [],                        // stack
+  _fi: {},                        // final
+  _pr: { st: string, sp: space }, // props
 
 
-  obj: function() {
-    const ob = this._ob;
-    return string ? JSON.stringify(ob, null, space) : ob;
+  obj: function(string = this._pr.st, space = this._pr.sp) {
+    const final = this._fi;
+    return string
+      ? JSON.stringify(final, null, space)
+      : final;
   },
 
 

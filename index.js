@@ -2,21 +2,31 @@
 const err = {
   throw: msg => { throw new Error(msg); },
 
-  inc: function(curr, prev, diff) {
+  increment: function(curr, prev, diff) {
     this.throw(`Only increment is allowed, but ${
       curr} - ${prev} = ${diff}`);
   },
 
-  tab: function() {
+  uselessTab: function() {
     this.throw('Remove unused last tab');
+  },
+
+  subZero: function(curr) {
+    this.throw(`Tab number (${curr}) can't be less than zero`);
   },
 };
 
 
-export default () => ({
+export default (string = false, space) => ({
   _de:  0, // depth
   _st: [], // stack
-  obj: {}, // final
+  _ob: {}, // final
+
+
+  obj: function() {
+    const ob = this._ob;
+    return string ? JSON.stringify(ob, null, space) : ob;
+  },
 
 
   key: function(name, tabs = 0) {
@@ -24,13 +34,14 @@ export default () => ({
     const curr = tabs;
     const diff = curr - prev;
 
-    if (curr > prev && diff !== 1)
-      err.inc(curr, prev, diff);
+    // checks
+    if (curr < 0) err.subZero(curr);
+    if (diff > 1) err.increment(curr, prev, diff);
 
     this._st.length = curr + 1;
     this._st[curr] = name;
 
-    this._de = curr;
+    if (diff) this._de = curr;
     console.log([prev, curr], this._st);
     return this;
   },
@@ -44,7 +55,7 @@ export default () => ({
   tab: function(tabs = 1) {
     return {
       key: name => this.key(name, tabs),
-      get obj() { err.tab() },
+      get obj() { err.uselessTab() },
 
       get o() { return this.obj },
       get k() { return this.key },

@@ -17,11 +17,11 @@ const err = {
 };
 
 
-export default (string = false, space) => ({
-  _de:  0,                        // depth
-  _st: [],                        // stack
-  _fi: {},                        // final
-  _pr: { st: string, sp: space }, // props
+export default (string = false, space, empty) => ({
+  _de:  0,                                   // depth
+  _st: [],                                   // stack
+  _fi: {},                                   // final
+  _pr: { st: string, sp: space, em: empty }, // props
 
 
   obj: function(string = this._pr.st, space = this._pr.sp) {
@@ -33,6 +33,7 @@ export default (string = false, space) => ({
 
 
   key: function(name, tabs = 0) {
+    const st = this._st;
     const prev = this._de;
     const curr = tabs;
     const diff = curr - prev;
@@ -41,16 +42,28 @@ export default (string = false, space) => ({
     if (curr < 0) err.subZero(curr);
     if (diff > 1) err.increment(curr, prev, diff);
 
-    this._st.length = curr + 1;
-    this._st[curr] = name;
+    st.length = curr + 1;
+    st[curr] = name;
+    this.val();
 
     if (diff) this._de = curr;
-    console.log([prev, curr], this._st);
+    console.log([prev, curr], st);
     return this;
   },
 
 
-  val: function(data) {
+  val: function(data = this._pr.em) {
+    const st = [...this._st];
+    const first = st.shift();
+    let value = data;
+
+    while (st.length) {
+      const obj = {};
+      obj[st.pop()] = value;
+      value = obj;
+    }
+
+    this._fi[first] = value;
     return this;
   },
 

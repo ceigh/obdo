@@ -47,23 +47,23 @@ export default (string = false, space, empty) => ({
     this.val();
 
     if (diff) this._de = curr;
-    console.log([prev, curr], st);
+    // console.log([prev, curr], st);
     return this;
   },
 
 
   val: function(data = this._pr.em) {
-    const st = [...this._st];
-    const first = st.shift();
+    const stack = this._st;
     let value = data;
 
-    while (st.length) {
+    for (let i = stack.length - 1; i > 0; --i) {
       const obj = {};
-      obj[st.pop()] = value;
+      obj[stack[i]] = value;
       value = obj;
     }
 
-    this._fi[first] = value;
+    this._fi[stack[0]] = value;
+    console.log(this._st, this._fi, value);
     return this;
   },
 

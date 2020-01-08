@@ -1,10 +1,10 @@
-/* eslint no-console: 0, newline-per-chained-call: 0 */
+/* eslint no-console: 0, newline-per-chained-call: 0, no-underscore-dangle: 0 */
 
 import o from './index.js';
 
 
 console.log(
-  o(true, '  ', null)
+  o(true, 2)
     .k('a')
     ._().k('a1').v('_a1')
     ._().k('a2')
@@ -16,3 +16,29 @@ console.log(
     .k('b').v('_b')
     .o(),
 );
+
+
+const a = o();
+console.log(Object.keys(a));
+
+// must fail
+// a.b = 3;
+// a.tab = 2;
+// Object.defineProperty(a, 'tab', { writable: true })
+// a._ = 3;
+// a._depth = 4;
+// a._inheritance = 4;
+// Object.defineProperty(a, '_inheritance', { writable: true });
+
+// must pass
+// Object.defineProperty(a, '_depth', { writable: true });
+// a._depth = 5;
+
+const t = a._();
+console.log(Object.keys(t));
+
+// must fail
+// t.ccc = 2;
+// t.key = 'asd';
+// t.o = 4;
+// Object.defineProperty(t, 'o', { value: 4 });

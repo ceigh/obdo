@@ -12,5 +12,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    // probably eslint bug
+    'import/extensions': 0,
   },
 };

@@ -19,8 +19,24 @@ Object.freeze(err);
 
 
 /* eslint-disable no-underscore-dangle */
+
+/**
+ * Main obdo function,
+ * use as initial setup and get tmp object to tweak
+ *
+ * @param {boolean} [stringify=false] - Use JSON.stringify
+ * @param {*} [space] - Stringify separator
+ * @param {*} [empty] - Default value for empty keys
+ *
+ * @return {Object} Tmp object to fill
+ */
 export default (stringify = false, space, empty) => {
   const obdo = {
+    /**
+     * Last chain method, must always be called
+     *
+     * @return {Object|string} Result JSON
+     */
     obj() {
       const object = this._object;
       return stringify
@@ -29,6 +45,14 @@ export default (stringify = false, space, empty) => {
     },
 
 
+    /**
+     * Add key to virtual inheritance stack of object
+     *
+     * @param {*} name - Key name
+     * @param {number} [depth=0] - At what depth should the key be placed
+     *
+     * @return {Object} Self object to support chaining
+     */
     key(name, depth = 0) {
       const inheritance = this._inheritance;
       const prevDepth = this._depth;
@@ -54,6 +78,13 @@ export default (stringify = false, space, empty) => {
     },
 
 
+    /**
+     * Assign value to last key in inheritance stack
+     *
+     * @param {*} [value=empty] - Value to assign, default is empty from setup
+     *
+     * @return {Object} Self object to support chaining
+     */
     val(value = empty) {
       const inheritance = this._inheritance;
       const object = this._object;
@@ -73,6 +104,13 @@ export default (stringify = false, space, empty) => {
     },
 
 
+    /**
+     * Pass depth to .key() call
+     *
+     * @param {number} [quantity=1] - Depth to pass
+     *
+     * @return {Object} Pseudo self object to curry .key() method in chain
+     */
     tab(quantity = 1) {
       const depth = quantity;
       const tab = {

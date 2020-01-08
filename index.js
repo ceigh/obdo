@@ -2,7 +2,7 @@
 const err = {
   throw: msg => { throw new Error(msg); },
 
-  increment: function(curr, prev, diff) {
+  onlyIncrement: function(curr, prev, diff) {
     this.throw(`Only increment is allowed, but ${
       curr} - ${prev} = ${diff}`);
   },
@@ -11,64 +11,65 @@ const err = {
     this.throw('Remove unused last tab');
   },
 
-  subZero: function(curr) {
+  currSubZero: function(curr) {
     this.throw(`Tab number (${curr}) can't be less than zero`);
   },
 };
 
 
-export default (string = false, space, empty) => ({
-  _de:  0,                                   // depth
-  _st: [],                                   // stack
-  _fi: {},                                   // final
-  _pr: { st: string, sp: space, em: empty }, // props
+export default (stringify = false, space, empty) => ({
+  _depth: 0,
+  _object: {},
+  _inheritance: [],
 
 
-  obj: function(string = this._pr.st, space = this._pr.sp) {
-    const final = this._fi;
-    return string
-      ? JSON.stringify(final, null, space)
-      : final;
+  obj: function() {
+    const object = this._object;
+    return stringify ? JSON.stringify(object, null, space) : object;
   },
 
 
-  key: function(name, tabs = 0) {
-    const st = this._st;
-    const prev = this._de;
-    const curr = tabs;
-    const diff = curr - prev;
+  key: function(name, depth = 0) {
+    const inheritance = this._inheritance;
+    const prevDepth = this._depth;
+    const currDepth = depth;
+    const diff = currDepth - prevDepth;
 
     // checks
-    if (curr < 0) err.subZero(curr);
-    if (diff > 1) err.increment(curr, prev, diff);
+    if (currDepth < 0) err.currSubZero(currDepth);
+    if (diff > 1) err.onlyIncrement(currDepth, prevDepth, diff);
 
-    st.length = curr + 1;
-    st[curr] = name;
-    this.val();
+    inheritance.length = currDepth + 1;
+    inheritance[currDepth] = name;
+    this.val(); // set empty
 
-    if (diff) this._de = curr;
-    // console.log([prev, curr], st);
+    if (diff) this._depth = currDepth;
     return this;
   },
 
 
-  val: function(data = this._pr.em) {
-    const stack = this._st;
-    let value = data;
+  val: function(value = empty) {
+    const inheritance = this._inheritance;
+    const object = this._object;
+    let tmp = value;
 
-    for (let i = stack.length - 1; i > 0; --i) {
-      const obj = {};
-      obj[stack[i]] = value;
-      value = obj;
+    for (let i = inheritance.length - 1; i > 0; --i) {
+      const tmpObj = {};
+      tmpObj[inheritance[i]] = tmp;
+      tmp = tmpObj;
     }
 
-    this._fi[stack[0]] = value;
-    console.log(this._st, this._fi, value);
+    object[inheritance[0]] = typeof tmp === 'object'
+      ? { ...object[inheritance[0]], ...tmp }
+      : value;
+
     return this;
   },
 
 
-  tab: function(tabs = 1) {
+  tab: function(quantity = 1) {
+    const tabs = quantity;
+
     return {
       key: name => this.key(name, tabs),
       get obj() { err.uselessTab() },

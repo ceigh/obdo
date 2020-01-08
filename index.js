@@ -1,4 +1,6 @@
 const err = {
+  throw: (msg) => { throw new Error(msg); },
+
   onlyIncrement(curr, prev, diff) {
     this.throw(`Only increment is allowed, but ${
       curr} - ${prev} = ${diff}`);
@@ -13,9 +15,6 @@ const err = {
   },
 };
 
-Object.defineProperty(err, 'throw', {
-  value: (msg) => { throw new Error(msg); },
-});
 Object.freeze(err);
 
 

@@ -1,4 +1,3 @@
-// errors
 const err = {
   throw: msg => { throw new Error(msg); },
 
@@ -25,7 +24,9 @@ export default (stringify = false, space, empty) => ({
 
   obj: function() {
     const object = this._object;
-    return stringify ? JSON.stringify(object, null, space) : object;
+    return stringify
+      ? JSON.stringify(object, null, space)
+      : object;
   },
 
 
@@ -68,10 +69,10 @@ export default (stringify = false, space, empty) => ({
 
 
   tab: function(quantity = 1) {
-    const tabs = quantity;
+    const depth = quantity;
 
     return {
-      key: name => this.key(name, tabs),
+      key: name => this.key(name, depth),
       get obj() { err.uselessTab() },
 
       get o() { return this.obj },

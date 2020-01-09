@@ -15,6 +15,11 @@
     "eslint-plugin-import": "^2.19.1",
     "jest": "^24.9.0"
   },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
   "eslintConfig": {
     "env": {
       "browser": true,
@@ -36,10 +41,5 @@
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     }
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ]
   }
 }

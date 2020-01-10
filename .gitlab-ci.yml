@@ -1,0 +1,31 @@
+image: node:latest
+
+before_script:
+  - npm i
+
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - lint
+  - test
+  - deploy
+
+eslint:
+  stage: lint
+  script:
+    - npm run lint
+
+jest:
+  stage: test
+  script:
+    - npm test -- --coverage
+
+npm:
+  stage: deploy
+  script:
+    - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > .npmrc
+    - npm publish
+  only:
+    - tags

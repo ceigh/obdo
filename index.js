@@ -138,6 +138,7 @@ export default (stringify = false, space, empty) => {
     _inheritance: { value: [] },
 
     // do this because we can't use Object.freeze()
+    obj: { writable: false, configurable: false },
     key: { writable: false, configurable: false },
     val: { writable: false, configurable: false },
     tab: { writable: false, configurable: false },

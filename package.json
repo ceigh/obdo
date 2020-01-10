@@ -1,6 +1,26 @@
 {
   "name": "obdo",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "description": "Simple chainable, flat, dot notation object generator",
+  "keywords": [
+    "json",
+    "object",
+    "generator",
+    "chain",
+    "dot notation"
+  ],
+  "homepage": "https://gitlab.com/ceigh/obdo#readme",
+  "repository": "gitlab:ceigh/obdo",
+  "bugs": {
+    "url": "https://gitlab.com/ceigh/obdo/issues",
+    "email": "ceigh@pm.me"
+  },
+  "license": "MIT",
+  "author": "Artjom Löbsack",
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "lint": "eslint --fix --cache .",

@@ -1,8 +1,10 @@
 /* eslint no-console: 0, newline-per-chained-call: 0, no-underscore-dangle: 0 */
+/* global describe, test, expect */
 
 import o from './index.js';
 
 
+/*
 console.log(
   o(true, 2)
     .k('a')
@@ -16,29 +18,100 @@ console.log(
     .k('b').v('_b')
     .o(),
 );
+*/
+
+describe('scope tests', () => {
+  test('only friendly keys', () => {
+    expect(Object.keys(o()))
+      .toEqual(['obj', 'key', 'val', 'tab']);
+  });
 
 
-const a = o();
-console.log(Object.keys(a));
+  describe('not allow new props', () => {
+    test('main', () => {
+      expect(() => o().newProp = 'newValue').toThrow();
+    });
 
-// must fail
-// a.b = 3;
-// a.tab = 2;
-// Object.defineProperty(a, 'tab', { writable: true })
-// a._ = 3;
-// a._depth = 4;
-// a._inheritance = 4;
-// Object.defineProperty(a, '_inheritance', { writable: true });
+    test('tab', () => {
+      expect(() => o().tab().newProp = 'newValue').toThrow();
+    });
+  });
 
-// must pass
-// Object.defineProperty(a, '_depth', { writable: true });
-// a._depth = 5;
 
-const t = a._();
-console.log(Object.keys(t));
+  describe('not allow write', () => {
+    const tmp = o();
 
-// must fail
-// t.ccc = 2;
-// t.key = 'asd';
-// t.o = 4;
-// Object.defineProperty(t, 'o', { value: 4 });
+    describe('main', () => {
+      Object.keys(tmp).forEach((k) => {
+        test(k, () => {
+          expect(() => tmp[k] = 'newValue').toThrow();
+        });
+      });
+    });
+
+    describe('aliases', () => {
+      ['o', 'k', 'v', '_'].forEach((k) => {
+        test(k, () => {
+          expect(() => tmp[k] = 'newValue').toThrow();
+        });
+      });
+    });
+
+    describe('hidden', () => {
+      ['_depth', '_object', '_inheritance'].forEach((k) => {
+        test(k, () => {
+          expect(() => tmp[k] = 'newValue').toThrow();
+        });
+      });
+    });
+
+    describe('tab', () => {
+      ['o', 'obj', 'k', 'key'].forEach((k) => {
+        test(k, () => {
+          expect(() => tmp.tab()[k] = 'newValue').toThrow();
+        });
+      });
+    });
+  });
+
+
+  describe('not allow configure', () => {
+    const tmp = o();
+
+    describe('main', () => {
+      Object.keys(tmp).forEach((k) => {
+        test(k, () => {
+          expect(() => Object.defineProperty(tmp, k, { writable: true }))
+            .toThrow();
+        });
+      });
+    });
+
+    describe('aliases', () => {
+      ['o', 'k', 'v', '_'].forEach((k) => {
+        test(k, () => {
+          expect(() => Object.defineProperty(tmp, k, { writable: true }))
+            .toThrow();
+        });
+      });
+    });
+
+    describe('hidden', () => {
+      ['_object', '_inheritance'].forEach((k) => { // not _depth
+        test(k, () => {
+          expect(() => Object.defineProperty(tmp, k, { writable: true }))
+            .toThrow();
+        });
+      });
+    });
+
+    describe('tab', () => {
+      ['o', 'obj', 'k', 'key'].forEach((k) => {
+        test(k, () => {
+          expect(() => Object.defineProperty(tmp.tab(), k, { writable: true }))
+            .toThrow();
+        });
+      });
+    });
+  });
+});

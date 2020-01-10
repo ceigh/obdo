@@ -175,7 +175,7 @@ const giza = o(true, '  ')
 |Argument|Type|Default|Description|
 |:------:|:--:|:-----:|:---------:|
 |`stringify`|`Boolean`|`false`|Use JSON.stringify() on result object, or not|
-|`space`|`String|Number`|`undefined`|Separator for stringify, if `String` use this string as separator, else if `Number` use `number * ' '` as separator|
+|`space`|`String` or `Number`|`undefined`|Separator for stringify, if `String` use this string as separator, else if `Number` use `number * ' '` as separator|
 |`empty`|`*`|`undefined`|Replace `undefined` values with this argument|
 
 Main `o()` function accept some arguments to tweak your object, for example:

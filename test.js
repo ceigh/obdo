@@ -31,8 +31,7 @@ describe('functionality tests', () => {
         ._().k('a2').v('_a2')
         .k('b')
         ._().k('b2').v('_b2')
-        .o()
-      ).toEqual({
+        .o()).toEqual({
         a: {
           a2: '_a2',
         },
@@ -47,8 +46,7 @@ describe('functionality tests', () => {
         .k('a')
         ._().k('a2')
         ._(2).k('a3').v('_a3')
-        .o()
-      ).toEqual({
+        .o()).toEqual({
         a: {
           a2: {
             a3: '_a3',
@@ -65,8 +63,7 @@ describe('functionality tests', () => {
         .k('b')
         ._().k('b2')
         ._(2).k('b3').v('_b3')
-        .o()
-      ).toEqual({
+        .o()).toEqual({
         a: {
           a2: {
             a3: '_a3',
@@ -85,8 +82,7 @@ describe('functionality tests', () => {
         .k('a')
         ._().k('a2').v('_a2')
         ._().k('a3').v('_a3')
-        .o()
-      ).toEqual({
+        .o()).toEqual({
         a: {
           a2: '_a2',
           a3: '_a3',
@@ -100,8 +96,7 @@ describe('functionality tests', () => {
         ._().k('a2')
         ._(2).k('a3').v('_a3')
         ._().k('a4').v('_a4')
-        .o()
-      ).toEqual({
+        .o()).toEqual({
         a: {
           a2: {
             a3: '_a3',
@@ -130,17 +125,17 @@ describe('functionality tests', () => {
 
   describe('params', () => {
     test('stringify', () => {
-      expect(o(true).k('a').v('_a').o()).toBe("{\"a\":\"_a\"}");
+      expect(o(true).k('a').v('_a').o()).toBe('{"a":"_a"}');
     });
-    
+
     test('stringify with space', () => {
       expect(o(true, ' ').k('a').v('_a').o())
-        .toBe("{\n \"a\": \"_a\"\n}");
+        .toBe('{\n "a": "_a"\n}');
     });
-    
+
     test('stringify with space (simple)', () => {
       expect(o(true, 1).k('a').v('_a').o())
-        .toBe("{\n \"a\": \"_a\"\n}");
+        .toBe('{\n "a": "_a"\n}');
     });
 
     test('empty placeholder', () => {

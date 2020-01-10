@@ -127,6 +127,7 @@ describe('functionality tests', () => {
     });
   });
 
+
   describe('params', () => {
     test('stringify', () => {
       expect(o(true).k('a').v('_a').o()).toBe("{\"a\":\"_a\"}");

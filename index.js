@@ -96,7 +96,7 @@ export default (stringify = false, space, empty) => {
         tmp = tmpObj;
       }
 
-      object[inheritance[0]] = typeof tmp === 'object'
+      object[inheritance[0]] = tmp !== null && typeof tmp === 'object'
         ? { ...object[inheritance[0]], ...tmp }
         : value;
 

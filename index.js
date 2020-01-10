@@ -25,7 +25,7 @@ Object.freeze(err);
  * use as initial setup and get tmp object to tweak
  *
  * @param {boolean} [stringify=false] - Use JSON.stringify
- * @param {*} [space] - Stringify separator
+ * @param {String|Number} [space] - Stringify separator
  * @param {*} [empty] - Default value for empty keys
  *
  * @return {Object} Tmp object to fill
